@@ -1,0 +1,10 @@
+*.cfg
+*.conf
+*.out
+*.repo
+*.rpm
+*.tar.*
+*\#*
+*~
+*.zip
+*/
