@@ -11,12 +11,12 @@ RSYNCOPTS=-a --no-owner --no-group
 #RSYNCSAFEOPTS=$(RSYNCOPTS) --ignore-existing 
 
 # "mock" configurations to build with, activate only as needed
-# Some RHEL dependencies are supplied locally in awsclirepo
+# Some RHEL dependencies are supplied locally in setuptoolrepo
 MOCKS+=epel-6-x86_64
 MOCKS+=epel-7-x86_64
 
 # Local yum compatible RPM repository
-REPOBASEDIR="`/bin/pwd | xargs dirname`/awsclirepo"
+REPOBASEDIR="`/bin/pwd | xargs dirname`/setuptoolrepo"
 
 # Deduce local package names and .spec files, for universe Makefile use
 SPEC := `ls *.spec | head -1`

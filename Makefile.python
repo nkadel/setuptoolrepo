@@ -11,13 +11,13 @@ RSYNCOPTS=-a --no-owner --no-group
 #RSYNCSAFEOPTS=$(RSYNCOPTS) --ignore-existing 
 
 # "mock" configurations to build with, activate only as needed
-# Some RHEL dependencies are supplied locally in setuprepo
+# Some RHEL dependencies are supplied locally in setuptoolrepo
 #MOCKS+=epel-6-x86_64
-MOCKS+=setuprepo-6-x86_64
-MOCKS+=setuprepo-7-x86_64
+MOCKS+=setuptoolrepo-6-x86_64
+MOCKS+=setuptoolrepo-7-x86_64
 
 # Local yum compatible RPM repository
-REPOBASEDIR="`/bin/pwd | xargs dirname`/setuprepo"
+REPOBASEDIR="`/bin/pwd | xargs dirname`/setuptoolrepo"
 
 # Deduce local package names and .spec files, for universe Makefile use
 SPEC := `ls *.spec | head -1`

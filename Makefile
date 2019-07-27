@@ -1,13 +1,13 @@
 #
-# Makefile - build wrapper for awscli on CentPOS 7
+# Makefile - build wrapper for setuptool on CentPOS 7
 #
 #	git clone RHEL 7 SRPM building tools from
 #	https://github.com/nkadel/[package] into designated
-#	AWSCLIPKGS below
+#	SETUPTOOLPKGS below
 #
 #	Set up local 
 
-# Rely on local nginx service poingint to file://$(PWD)/awsclirepo
+# Rely on local nginx service poingint to file://$(PWD)/setuptoolrepo
 REPOBASE = file://$(PWD)
 #EPOBASE = http://localhost
 
@@ -16,14 +16,14 @@ EPELPKGS+=python-certifi-srpm/
 
 SETUPPKGS+=python-setuptool-srpm/
 
-REPOS+=awsclirepo/el/6
-REPOS+=awsclirepo/el/7
+REPOS+=setuptoolrepo/el/6
+REPOS+=setuptoolrepo/el/7
 
 REPODIRS := $(patsubst %,%/x86_64/repodata,$(REPOS)) $(patsubst %,%/SRPMS/repodata,$(REPOS))
 
 # No local dependencies at build time
-CFGS+=awsclirepo-6-x86_64.cfg
-CFGS+=awsclirepo-7-x86_64.cfg
+CFGS+=setuptoolrepo-6-x86_64.cfg
+CFGS+=setuptoolrepo-7-x86_64.cfg
 
 # Link from /etc/mock
 MOCKCFGS+=epel-6-x86_64.cfg
@@ -32,10 +32,10 @@ MOCKCFGS+=epel-7-x86_64.cfg
 all:: $(CFGS) $(MOCKCFGS)
 all:: $(REPODIRS)
 all:: $(EPELPKGS)
-all:: $(AWSCLIPKGS)
+all:: $(SETUPTOOLPKGS)
 
 all install clean:: FORCE
-	@for name in $(EPELPKGS) $(AWSCLIPKGS); do \
+	@for name in $(EPELPKGS) $(SETUPTOOLPKGS); do \
 	     (cd $$name; $(MAKE) $(MFLAGS) $@); \
 	done  
 
@@ -43,12 +43,12 @@ epel:: $(EPELPKGS)
 
 # Build for locacl OS
 build:: FORCE
-	@for name in $(AWSCLIPKGS); do \
+	@for name in $(SETUPTOOLPKGS); do \
 	     (cd $$name; $(MAKE) $(MFLAGS) $@); \
 	done
 
 # Dependencies
-python-awscli-srpm::
+python-setuptool-srpm::
 
 python-linecacwe-srpm:: python-fixtures-srpm
 python-linecacwe-srpm:: python-unittest2-srpm
@@ -73,16 +73,16 @@ $(REPODIRS): $(REPOS)
 .PHONY: cfg cfgs
 cfg cfgs:: $(CFGS) $(MOCKCFGS)
 
-awsclirepo-6-x86_64.cfg: epel-6-x86_64.cfg
+setuptoolrepo-6-x86_64.cfg: epel-6-x86_64.cfg
 	@echo Generating $@ from $?
 	@cat $? > $@
-	@sed -i 's/epel-6-x86_64/awsclirepo-6-x86_64/g' $@
+	@sed -i 's/epel-6-x86_64/setuptoolrepo-6-x86_64/g' $@
 	@echo '"""' >> $@
 	@echo >> $@
-	@echo '[awsclirepo]' >> $@
-	@echo 'name=awsclirepo' >> $@
+	@echo '[setuptoolrepo]' >> $@
+	@echo 'name=setuptoolrepo' >> $@
 	@echo 'enabled=1' >> $@
-	@echo 'baseurl=$(REPOBASE)/awsclirepo/el/6/x86_64/' >> $@
+	@echo 'baseurl=$(REPOBASE)/setuptoolrepo/el/6/x86_64/' >> $@
 	@echo 'failovermethod=priority' >> $@
 	@echo 'skip_if_unavailable=False' >> $@
 	@echo 'metadata_expire=1' >> $@
@@ -92,16 +92,16 @@ awsclirepo-6-x86_64.cfg: epel-6-x86_64.cfg
 	@uniq -u $@ > $@~
 	@mv $@~ $@
 
-awsclirepo-7-x86_64.cfg: epel-7-x86_64.cfg
+setuptoolrepo-7-x86_64.cfg: epel-7-x86_64.cfg
 	@echo Generating $@ from $?
 	@cat $? > $@
-	@sed -i 's/epel-7-x86_64/awsclirepo-7-x86_64/g' $@
+	@sed -i 's/epel-7-x86_64/setuptoolrepo-7-x86_64/g' $@
 	@echo '"""' >> $@
 	@echo >> $@
-	@echo '[awsclirepo]' >> $@
-	@echo 'name=awsclirepo' >> $@
+	@echo '[setuptoolrepo]' >> $@
+	@echo 'name=setuptoolrepo' >> $@
 	@echo 'enabled=1' >> $@
-	@echo 'baseurl=$(REPOBASE)/awsclirepo/el/7/x86_64/' >> $@
+	@echo 'baseurl=$(REPOBASE)/setuptoolrepo/el/7/x86_64/' >> $@
 	@echo 'failovermethod=priority' >> $@
 	@echo 'skip_if_unavailable=False' >> $@
 	@echo 'metadata_expire=1' >> $@
@@ -114,8 +114,8 @@ awsclirepo-7-x86_64.cfg: epel-7-x86_64.cfg
 $(MOCKCFGS)::
 	ln -sf --no-dereference /etc/mock/$@ $@
 
-repo: awsclirepo.repo
-awsclirepo.repo:: Makefile awsclirepo.repo.in
+repo: setuptoolrepo.repo
+setuptoolrepo.repo:: Makefile setuptoolrepo.repo.in
 	if [ -s /etc/fedora-release ]; then \
 		cat $@.in | \
 			sed "s|@REPOBASEDIR@/|$(PWD)/|g" | \
@@ -129,17 +129,17 @@ awsclirepo.repo:: Makefile awsclirepo.repo.in
 		exit 1; \
 	fi
 
-awsclirepo.repo:: FORCE
+setuptoolrepo.repo:: FORCE
 	cmp -s /etc/yum.repos.d/$@ $@       
 
 
-nginx:: nginx/default.d/awsclirepo.conf
+nginx:: nginx/default.d/setuptoolrepo.conf
 
-nginx/default.d/awsclirepo.conf:: FORCE nginx/default.d/awsclirepo.conf.in
+nginx/default.d/setuptoolrepo.conf:: FORCE nginx/default.d/setuptoolrepo.conf.in
 	cat $@.in | \
 		sed "s|@REPOBASEDIR@;|$(PWD)/;|g" | tee $@;
 
-nginx/default.d/awsclirepo.conf:: FORCE
+nginx/default.d/setuptoolrepo.conf:: FORCE
 	cmp -s $@ /etc/$@ || \
 	    diff -u $@ /etc/$@
 
