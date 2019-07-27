@@ -1,13 +1,13 @@
-[setuptool]
+[setuptoolrepo]
 name=Samba repo - $basearch
-baseurl=file://@REPOBASEDIR@/setuptool/@RELEASEDIR@/$releasever/$basearch
+baseurl=file://@REPOBASEDIR@/setuptoolrepo/@RELEASEDIR@/$releasever/$basearch
 enabled=0
 gpgcheck=0
 metadata_expire=1
 
-[setuptool-source]
+[setuptoolrepo-source]
 name=Samba repo - Source
-baseurl=file://@REPOBASEDIR@/setuptool/@RELEASEDIR@/$releasever/SRPMS/
+baseurl=file://@REPOBASEDIR@/setuptoolrepo/@RELEASEDIR@/$releasever/SRPMS/
 enabled=0
 gpgcheck=0
 metadata_expire=1
