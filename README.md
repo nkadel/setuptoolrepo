@@ -1,5 +1,5 @@
-setuptoolrep
-============
+setuptoolrepo
+=============
 
 Wrapper for SRPM building tools for python setuptools update
 
