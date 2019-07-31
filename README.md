@@ -1,12 +1,15 @@
 setuptoolrepo
 =============
 
-Wrapper for SRPM building tools for python setuptools update
+Wrapper for SRPM building tools for python setuptools and pip update
 
 The python-setuptools packages for RHEL 6 and 7 are so out of date
 they can no longer compile contemporary modules from
 https://pypi.org. It's useful to able to install RPMs, especially to
 use inside "mock", for building other RPMs of modern modules.
+
+python-pip is also updated, but only for RHEL 7 since the RHEL 6 update
+is simply impossible.
 
 Git Checkout
 ===========
