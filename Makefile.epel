@@ -15,6 +15,9 @@ RSYNCOPTS=-a --no-owner --no-group
 MOCKS+=epel-7-x86_64
 MOCKS+=epel-6-x86_64
 
+MOCKCFGS+=setuptoolrepo-7-x86_64
+MOCKCFGS+=setuptoolrepo-6-x86_64
+
 # Local yum compatible RPM repository
 REPOBASEDIR="`/bin/pwd | xargs dirname`/setuptoolrepo"
 
@@ -63,7 +66,6 @@ install:: $(MOCKS)
 	    case $$repo in \
 		*-6-x86_64) yumrelease=el/6; yumarch=x86_64; ;; \
 		*-7-x86_64) yumrelease=el/7; yumarch=x86_64; ;; \
-		*-f28-x86_64) yumrelease=fedora/28; yumarch=x86_64; ;; \
 		*-f30-x86_64) yumrelease=fedora/30; yumarch=x86_64; ;; \
 		*) echo "Unrecognized release for $$repo, exiting" >&2; exit 1; ;; \
 	    esac; \
@@ -75,6 +77,10 @@ install:: $(MOCKS)
 	    echo "	Pushing RPMS to $$rpmdir"; \
 	    rsync $(RSYNCSAFEOPTS) --exclude=*.src.rpm --exclude=*debuginfo*.rpm $$repo/*.rpm $$rpmdir/. || exit 1; \
 	    createrepo -q $$rpmdir/.; \
+	done
+	@for repo in $(MOCKCFGS); do \
+	    echo "Touching $(PWD)/../$$repo.cfg"; \
+	    /bin/touch --no-dereference $(PWD)/../$$repo.cfg; \
 	done
 
 clean::

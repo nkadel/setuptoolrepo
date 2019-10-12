@@ -73,12 +73,15 @@ $(REPODIRS): $(REPOS)
 .PHONY: cfg cfgs
 cfg cfgs:: $(CFGS) $(MOCKCFGS)
 
-setuptoolrepo-6-x86_64.cfg: epel-6-x86_64.cfg
+setuptoolrepo-6-x86_64.cfg: /etc/mock/epel-6-x86_64.cfg
 	@echo Generating $@ from $?
 	@cat $? > $@
 	@sed -i 's/epel-6-x86_64/setuptoolrepo-6-x86_64/g' $@
-	@echo '"""' >> $@
 	@echo >> $@
+	@echo "Disabling 'best=' for $@"
+	@sed -i '/^best=/d' $@
+	@echo "best=0" >> $@
+	@echo "config_opts['yum.conf'] += \"\"\"" >> $@
 	@echo '[setuptoolrepo]' >> $@
 	@echo 'name=setuptoolrepo' >> $@
 	@echo 'enabled=1' >> $@
@@ -89,27 +92,26 @@ setuptoolrepo-6-x86_64.cfg: epel-6-x86_64.cfg
 	@echo 'gpgcheck=0' >> $@
 	@echo '#cost=2000' >> $@
 	@echo '"""' >> $@
-	@uniq -u $@ > $@~
-	@mv $@~ $@
 
 setuptoolrepo-7-x86_64.cfg: epel-7-x86_64.cfg
 	@echo Generating $@ from $?
 	@cat $? > $@
-	@sed -i 's/epel-7-x86_64/setuptoolrepo-7-x86_64/g' $@
-	@echo '"""' >> $@
+	@sed -i 's/epel-7-x86_64/samba4repo-7-x86_64/g' $@
 	@echo >> $@
-	@echo '[setuptoolrepo]' >> $@
-	@echo 'name=setuptoolrepo' >> $@
+	@echo "Disabling 'best=' for $@"
+	@sed -i '/^best=/d' $@
+	@echo "best=0" >> $@
+	@echo "config_opts['yum.conf'] += \"\"\"" >> $@
+	@echo '[samba4repo]' >> $@
+	@echo 'name=samba4repo' >> $@
 	@echo 'enabled=1' >> $@
-	@echo 'baseurl=$(REPOBASE)/setuptoolrepo/el/7/x86_64/' >> $@
+	@echo 'baseurl=$(REPOBASE)/samba4repo/el/7/x86_64/' >> $@
 	@echo 'failovermethod=priority' >> $@
 	@echo 'skip_if_unavailable=False' >> $@
 	@echo 'metadata_expire=1' >> $@
 	@echo 'gpgcheck=0' >> $@
 	@echo '#cost=2000' >> $@
 	@echo '"""' >> $@
-	@uniq -u $@ > $@~
-	@mv $@~ $@
 
 $(MOCKCFGS)::
 	ln -sf --no-dereference /etc/mock/$@ $@

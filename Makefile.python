@@ -16,6 +16,8 @@ RSYNCOPTS=-a --no-owner --no-group
 MOCKS+=setuptoolrepo-6-x86_64
 MOCKS+=setuptoolrepo-7-x86_64
 
+MOCKCFGS+=$(MOCKS)
+
 # Local yum compatible RPM repository
 REPOBASEDIR="`/bin/pwd | xargs dirname`/setuptoolrepo"
 
@@ -76,6 +78,10 @@ install:: $(MOCKS)
 	    echo "	Pushing RPMS to $$rpmdir"; \
 	    rsync $(RSYNCSAFEOPTS) --exclude=*.src.rpm --exclude=*debuginfo*.rpm $$repo/*.rpm $$rpmdir/. || exit 1; \
 	    createrepo -q $$rpmdir/.; \
+	done
+	@for repo in $(MOCKCFGS); do \
+	    echo "Touching $(PWD)/../$$repo.cfg"; \
+	    /bin/touch --no-dereference $(PWD)/../$$repo.cfg; \
 	done
 
 clean::
